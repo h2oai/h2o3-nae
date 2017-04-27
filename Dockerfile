@@ -80,8 +80,7 @@ RUN \
 
 EXPOSE 54321
 
-ADD ./scripts/start.sh /tmp/start.sh
-RUN chmod +x /tmp/start.sh
+ADD ./scripts /tmp
 
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
@@ -96,3 +95,5 @@ RUN cp -a /tmp/image-common-master/etc /etc/JARVICE && chmod 755 /etc/JARVICE &&
 RUN mkdir -m 0755 /data && chown nimbix:nimbix /data
 RUN sed -ie 's/start on.*/start on filesystem/' /etc/init/ssh.conf
 
+USER nimbix
+CMD ["/tmp/start.sh"]
