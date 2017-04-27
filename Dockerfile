@@ -80,7 +80,7 @@ RUN \
 
 EXPOSE 54321
 
-ADD scripts/start.sh /tmp/start.sh
+ADD ./scripts/start.sh /tmp/start.sh
 RUN chmod +x /tmp/start.sh
 
 # Nimbix Integrations
