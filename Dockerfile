@@ -86,6 +86,7 @@ RUN chmod +x /tmp/start.sh
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
 ADD ./NAE/AppDef.png /etc//NAE/default.png
+ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
 ADD ./NAE/url.txt /etc/NAE/url.txt
 
 # Nimbix JARVICE emulation
