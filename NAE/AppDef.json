@@ -1,0 +1,37 @@
+{
+    "name": "H2o-3",
+    "description": "Fast Scalable Machine Learning For Smarter Applications",
+    "author": "h2o.ai",
+    "licensed": true,
+    "classifications": [
+        "Machine Learning/Deep Learning"
+    ],
+    "machines": [
+        "n0",
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "n5",
+        "n32"
+    ],
+    "scale_max": 16,
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "Server": {
+            "path": "/tmp/start.sh",
+            "interactive": true,
+            "name": "H2o-3",
+            "description": "Run the H2o Server",
+            "parameters": {}
+        }
+    },
+    "image": {
+        "type": "image/png"
+    }
+}
