@@ -80,7 +80,8 @@ RUN \
 
 EXPOSE 54321
 
-ADD ./scripts /tmp
+COPY ./scripts/start.sh /opt/start.sh
+RUN chmod +x /opt/start.sh
 
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
@@ -96,4 +97,4 @@ RUN mkdir -m 0755 /data && chown nimbix:nimbix /data
 RUN sed -ie 's/start on.*/start on filesystem/' /etc/init/ssh.conf
 
 USER nimbix
-CMD ["/tmp/start.sh"]
+CMD ["/opt/start.sh"]
