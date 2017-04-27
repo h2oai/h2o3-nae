@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
+FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 MAINTAINER Nimbix, Inc. <support@nimbix.net>
 
 # Nimbix base OS
@@ -7,7 +7,7 @@ ADD https://github.com/nimbix/image-common/archive/master.zip /tmp/nimbix.zip
 WORKDIR /tmp
 RUN apt-get update && apt-get -y install sudo zip unzip && unzip nimbix.zip && rm -f nimbix.zip
 RUN /tmp/image-common-master/setup-nimbix.sh
-RUN touch /etc/init.d/systemd-logind && 
+RUN touch /etc/init.d/systemd-logind
 RUN apt-get -y install \
   module-init-tools \
   xz-utils \
@@ -49,6 +49,14 @@ RUN \
   software-properties-common \
   python-software-properties
 
+# Get R
+RUN \
+  echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list 
+  gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
+  gpg -a --export E084DAB9 | apt-key add -&& \
+  apt-get update -q -y && \
+  apt-get install -y r-base r-base-dev
+
 # Install Oracle Java 8
 RUN add-apt-repository -y ppa:webupd8team/java && apt-get update -q && \
 echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -68,6 +76,8 @@ RUN \
   cp h2o.jar /opt && \
   /usr/bin/pip install --upgrade pip && \
   /usr/bin/pip install `find . -name "*.whl"`
+
+EXPOSE 54321
 
 ADD scripts/start.sh /tmp/start.sh
 RUN chmod +x /tmp/start.sh
