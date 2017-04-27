@@ -9,6 +9,7 @@ RUN apt-get update && apt-get -y install sudo zip unzip && unzip nimbix.zip && r
 RUN /tmp/image-common-master/setup-nimbix.sh
 RUN touch /etc/init.d/systemd-logind
 RUN apt-get -y install \
+  locales \
   module-init-tools \
   xz-utils \
   vim \
@@ -51,7 +52,7 @@ RUN \
 
 # Get R
 RUN \
-  echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list 
+  echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list && \ 
   gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
   gpg -a --export E084DAB9 | apt-key add -&& \
   apt-get update -q -y && \
