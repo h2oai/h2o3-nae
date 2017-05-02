@@ -54,10 +54,10 @@
                 }
             }
         },
-        "Server": {
-            "path": "/opt/start-h2o3.sh",
+        "Cluster": {
+            "path": "/opt/start-cluster.sh",
             "interactive": true,
-            "name": "H2o-3 Server",
+            "name": "H2o-3 Cluster",
             "description": "Run the H2o Server",
             "parameters": {}
         },
