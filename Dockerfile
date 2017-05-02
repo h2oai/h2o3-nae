@@ -37,6 +37,7 @@ RUN apt-get -y install \
   software-properties-common \
   python-software-properties \
   iputils-ping \
+  nginx \
   grep
 
 # Clean and generate locales
@@ -51,10 +52,11 @@ RUN \
   gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
   gpg -a --export E084DAB9 | apt-key add -&& \
   curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
-  add-apt-repository -y ppa:webupd8team/java && apt-get update -q && \
+  add-apt-repository ppa:fkrull/deadsnakes  && \
+  add-apt-repository -y ppa:webupd8team/java && \
+  apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
-  apt-get update -yqq 
+  echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
 # Install H2o dependancies
 RUN \
@@ -66,14 +68,22 @@ RUN \
   python3-pandas \
   python3-numpy \
   python3-matplotlib \
-  r-base \
-  r-base-dev \
-  nodejs \
   libxml2-dev \
   libssl-dev \
   libcurl4-openssl-dev \
   libmysqlclient-dev \
-  nginx
+  nodejs 
+
+# Get R
+RUN \
+  apt-get install -y r-base r-base-dev && \
+  wget https://cran.cnr.berkeley.edu/src/contrib/data.table_1.10.4.tar.gz && \
+  wget https://cran.cnr.berkeley.edu/src/contrib/lazyeval_0.2.0.tar.gz && \
+  wget https://cran.cnr.berkeley.edu/src/contrib/Rcpp_0.12.10.tar.gz && \
+  wget https://cran.cnr.berkeley.edu/src/contrib/tibble_1.3.0.tar.gz && \
+  wget https://cran.cnr.berkeley.edu/src/contrib/hms_0.3.tar.gz && \
+  wget https://cran.cnr.berkeley.edu/src/contrib/feather_0.3.1.tar.gz && \
+  R CMD INSTALL data.table_1.10.4.tar.gz lazyeval_0.2.0.tar.gz Rcpp_0.12.10.tar.gz tibble_1.3.0.tar.gz hms_0.3.tar.gz feather_0.3.1.tar.gz
 
 # Install Oracle Java 8
 RUN \
@@ -89,33 +99,37 @@ RUN \
   rm /opt/h2o.zip && \
   cd /opt && \
   cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \ 
-  cp h2o.jar /opt && \
+  cp h2o.jar /opt
+  
+# Install Python Dependancies
+RUN \
   /usr/bin/pip3 install --upgrade pip && \
-  /usr/bin/pip3 install `find . -name "*.whl"`
+  /usr/bin/pip3 install `find . -name "*.whl"` && \
+  /usr/bin/pip3 install jupyter
 
 # Configure Nginx
 COPY configs/default /etc/nginx/sites-enabled/default
 COPY configs/notebook-site /etc/nginx/sites-enabled/notebook-site
 COPY configs/httpredirect.conf /etc/nginx/conf.d/httpredirect.conf
-RUN \
-  pip3 install jupyter
 
-EXPOSE 54321
-EXPOSE 443
-EXPOSE 80
-EXPOSE 8888
-
+# Copy bash scripts
 COPY scripts/start-h2o3.sh /opt/start-h2o3.sh
 COPY scripts/make-flatfile.sh /opt/make-flatfile.sh
 COPY scripts/start-cluster.sh /opt/start-cluster.sh
 COPY scripts/start-jupyter.sh /opt/start-jupyter.sh
 
+# Set executable on scripts
 RUN \
   chown -R nimbix:nimbix /opt && \
   chmod +x /opt/start-h2o3.sh && \
   chmod +x /opt/make-flatfile.sh && \
   chmod +x /opt/start-cluster.sh && \
   chmod +x /opt/start-jupyter.sh 
+
+EXPOSE 54321
+EXPOSE 443
+EXPOSE 80
+EXPOSE 8888
 
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
