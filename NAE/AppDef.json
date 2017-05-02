@@ -61,6 +61,13 @@
             "description": "Run the H2o Server",
             "parameters": {}
         },
+        "Jupyter": {
+            "path": "/opt/start-jupyter.sh",
+            "interactive": true,
+            "name": "Jupyter Notebook",
+            "description": "Launch Jupyter Notebook, ssh tunnel to get secure access, ex: ssh -L 8888:localhost:8888 nimbix@<public_ip>",
+            "parameters": {}
+        },
         "SSH": {
             "path": "/sbin/init",
             "interactive": true,

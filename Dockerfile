@@ -72,7 +72,8 @@ RUN \
   libxml2-dev \
   libssl-dev \
   libcurl4-openssl-dev \
-  libmysqlclient-dev
+  libmysqlclient-dev \
+  nginx
 
 # Install Oracle Java 8
 RUN \
@@ -92,16 +93,29 @@ RUN \
   /usr/bin/pip3 install --upgrade pip && \
   /usr/bin/pip3 install `find . -name "*.whl"`
 
+# Configure Nginx
+COPY configs/default /etc/nginx/sites-enabled/default
+COPY configs/notebook-site /etc/nginx/sites-enabled/notebook-site
+COPY configs/httpredirect.conf /etc/nginx/conf.d/httpredirect.conf
+RUN \
+  pip3 install jupyter
+
 EXPOSE 54321
+EXPOSE 443
+EXPOSE 80
+EXPOSE 8888
 
 COPY scripts/start-h2o3.sh /opt/start-h2o3.sh
 COPY scripts/make-flatfile.sh /opt/make-flatfile.sh
 COPY scripts/start-cluster.sh /opt/start-cluster.sh
+COPY scripts/start-jupyter.sh /opt/start-jupyter.sh
+
 RUN \
   chown -R nimbix:nimbix /opt && \
   chmod +x /opt/start-h2o3.sh && \
   chmod +x /opt/make-flatfile.sh && \
-  chmod +x /opt/start-cluster.sh 
+  chmod +x /opt/start-cluster.sh && \
+  chmod +x /opt/start-jupyter.sh 
 
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
@@ -115,3 +129,8 @@ RUN mkdir -p /usr/lib/JARVICE && cp -a /tmp/image-common-master/tools /usr/lib/J
 RUN cp -a /tmp/image-common-master/etc /etc/JARVICE && chmod 755 /etc/JARVICE && rm -rf /tmp/image-common-master
 RUN mkdir -m 0755 /data && chown nimbix:nimbix /data
 RUN sed -ie 's/start on.*/start on filesystem/' /etc/init/ssh.conf
+
+# configure Jupyter with default password h2oai
+USER nimbix
+RUN jupyter notebook --generate-config
+COPY configs/jupyter_notebook_config.json /home/nimbix/.jupyter/jupyter_notebook_config.json
