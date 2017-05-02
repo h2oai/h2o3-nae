@@ -3,6 +3,6 @@
 cat nodes | while read n;
 do
   echo "Starting node $n"
-  ssh nimbix@$n /opt/make-flatfile.sh 
+  scp flatfile.txt nimbix@$n:/opt/flatfile.txt
   ssh nimbix@$n /opt/start-h2o3.sh &
 done
