@@ -94,13 +94,14 @@ RUN \
 
 EXPOSE 54321
 
-COPY ./scripts/start-h2o3.sh /opt/start-h2o3.sh
-COPY ./scripts/make-flatfile.sh /opt/make-flatfile.sh
+COPY scripts/start-h2o3.sh /opt/start-h2o3.sh
+COPY scripts/make-flatfile.sh /opt/make-flatfile.sh
+COPY scripts/start-cluster.sh /opt/start-cluster.sh
 RUN \
   chown -R nimbix:nimbix /opt && \
   chmod +x /opt/start-h2o3.sh && \
-  chmod +x /opt/make-flatfile.sh
-
+  chmod +x /opt/make-flatfile.sh && \
+  chmod +x /opt/start-cluster.sh 
 
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
