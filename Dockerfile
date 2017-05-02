@@ -35,7 +35,8 @@ RUN apt-get -y install \
   screen \
   wget \
   software-properties-common \
-  python-software-properties \ 
+  python-software-properties \
+  iputils-ping \
   grep
 
 # Clean and generate locales
@@ -96,8 +97,9 @@ EXPOSE 54321
 COPY ./scripts/start-h2o3.sh /opt/start-h2o3.sh
 COPY ./scripts/make-flatfile.sh /opt/make-flatfile.sh
 RUN \
+  chown -R nimbix:nimbix /opt && \
   chmod +x /opt/start-h2o3.sh && \
-  chmod +x /opt/make-flatfile.txt 
+  chmod +x /opt/make-flatfile.sh
 
 
 # Nimbix Integrations
