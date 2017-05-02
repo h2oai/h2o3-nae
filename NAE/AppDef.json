@@ -55,9 +55,9 @@
             }
         },
         "Server": {
-            "path": "/opt/start.sh",
+            "path": "/opt/start-h2o3.sh",
             "interactive": true,
-            "name": "H2o3 Server",
+            "name": "H2o-3 Server",
             "description": "Run the H2o Server",
             "parameters": {}
         },

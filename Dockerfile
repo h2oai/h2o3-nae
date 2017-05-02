@@ -93,8 +93,12 @@ RUN \
 
 EXPOSE 54321
 
-COPY ./scripts/start.sh /opt/start.sh
-RUN chmod +x /opt/start.sh
+COPY ./scripts/start-h2o3.sh /opt/start-h2o3.sh
+COPY ./scripts/make-flatfile.sh /opt/make-flatfile.sh
+RUN \
+  chmod +x /opt/start-h2o3.sh && \
+  chmod +x /opt/make-flatfile.txt 
+
 
 # Nimbix Integrations
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
