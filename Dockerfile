@@ -4,6 +4,12 @@ MAINTAINER H2o.ai <ops@h2o.ai>
 # Nimbix base OS
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN \
+  apt-get -y update && \
+  apt-get install -y \
+  curl \
+  wget
+
 # Nimbix Common
 RUN \
   curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
