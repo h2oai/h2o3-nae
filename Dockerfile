@@ -53,19 +53,6 @@ RUN \
   nodejs \
   iputils-ping
   
-# Nimbix Common
-RUN \
-  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
-
-# Expose port 22 for local JARVICE emulation in docker
-EXPOSE 22
-
-# Notebook Common
-ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
-RUN \
-  bash /tmp/install-ubuntu.sh 3 && \
-  rm -f /tmp/install-ubuntu.sh
-
 # Get R
 RUN \
   apt-get install -y r-base r-base-dev && \
@@ -95,6 +82,8 @@ RUN \
   gdebi -n rstudio-server-1.0.143-amd64.deb && \
   rm rstudio-server-1.0.143-amd64.deb
 
+EXPOSE 8787
+
 # Install H2o
 RUN \
   wget http://h2o-release.s3.amazonaws.com/h2o/latest_stable -O latest && \
@@ -104,6 +93,8 @@ RUN \
   cd /opt && \
   cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \ 
   cp h2o.jar /opt
+
+EXPOSE 54321
   
 # Install Python Dependancies
 RUN \
