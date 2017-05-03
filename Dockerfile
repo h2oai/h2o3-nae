@@ -1,50 +1,36 @@
 FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
-MAINTAINER Nimbix, Inc. <support@nimbix.net>
+MAINTAINER H2o.ai <ops@h2o.ai>
 
 # Nimbix base OS
 ENV DEBIAN_FRONTEND noninteractive
-ADD https://github.com/nimbix/image-common/archive/master.zip /tmp/nimbix.zip
-WORKDIR /tmp
-RUN apt-get update && apt-get -y install sudo zip unzip && unzip nimbix.zip && rm -f nimbix.zip
-RUN /tmp/image-common-master/setup-nimbix.sh
-RUN touch /etc/init.d/systemd-logind
+
+# Nimbix Integrations
+ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
+ADD ./NAE/AppDef.png /etc//NAE/default.png
+ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
+
+RUN \
+  apt-get -y update && \
+  apt-get -y install \
+    curl \
+    apt-utils
+
+RUN \
+  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
+
+# Expose port 22 for local JARVICE emulation in docker
+EXPOSE 22
+
+# Notebook Common
+ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
+RUN \
+  bash /tmp/install-ubuntu.sh 3 && \
+  rm -f /tmp/install-ubuntu.sh
+
 RUN apt-get -y install \
-  locales \
-  module-init-tools \
-  xz-utils \
-  vim \
-  openssh-server \
-  libpam-systemd \
-  libmlx4-1 \
-  libmlx5-1 \
-  iptables \
-  infiniband-diags \
-  build-essential \
-  curl \
-  libibverbs-dev \
-  libibverbs1 \
-  librdmacm1 \
-  librdmacm-dev \
-  rdmacm-utils \
-  libibmad-dev \
-  libibmad5 \
-  byacc \
-  flex \
-  git \
-  cmake \
-  screen \
-  wget \
   software-properties-common \
   python-software-properties \
-  iputils-ping \
-  nginx \
-  grep
-
-# Clean and generate locales
-RUN \
-  apt-get clean && \
-  locale-gen en_US.UTF-8 && \
-  update-locale LANG=en_US.UTF-8
+  iputils-ping 
 
 # Setup Repos
 RUN \
@@ -61,9 +47,6 @@ RUN \
 # Install H2o dependancies
 RUN \
   apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip \
   python3-sklearn \
   python3-pandas \
   python3-numpy \
@@ -72,6 +55,7 @@ RUN \
   libssl-dev \
   libcurl4-openssl-dev \
   libmysqlclient-dev \
+  libgtk2.0-0 \
   nodejs 
 
 # Get R
@@ -104,47 +88,17 @@ RUN \
 # Install Python Dependancies
 RUN \
   /usr/bin/pip3 install --upgrade pip && \
-  /usr/bin/pip3 install `find . -name "*.whl"` && \
-  /usr/bin/pip3 install jupyter
-
-# Configure Nginx
-COPY configs/default /etc/nginx/sites-enabled/default
-COPY configs/notebook-site /etc/nginx/sites-enabled/notebook-site
-COPY configs/httpredirect.conf /etc/nginx/conf.d/httpredirect.conf
+  cd /opt && \
+  /usr/bin/pip3 install `find . -name "*.whl"`
 
 # Copy bash scripts
 COPY scripts/start-h2o3.sh /opt/start-h2o3.sh
 COPY scripts/make-flatfile.sh /opt/make-flatfile.sh
 COPY scripts/start-cluster.sh /opt/start-cluster.sh
-COPY scripts/start-jupyter.sh /opt/start-jupyter.sh
 
 # Set executable on scripts
 RUN \
   chown -R nimbix:nimbix /opt && \
   chmod +x /opt/start-h2o3.sh && \
   chmod +x /opt/make-flatfile.sh && \
-  chmod +x /opt/start-cluster.sh && \
-  chmod +x /opt/start-jupyter.sh 
-
-EXPOSE 54321
-EXPOSE 443
-EXPOSE 80
-EXPOSE 8888
-
-# Nimbix Integrations
-ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
-ADD ./NAE/AppDef.png /etc//NAE/default.png
-ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
-ADD ./NAE/url.txt /etc/NAE/url.txt
-
-# Nimbix JARVICE emulation
-EXPOSE 22
-RUN mkdir -p /usr/lib/JARVICE && cp -a /tmp/image-common-master/tools /usr/lib/JARVICE
-RUN cp -a /tmp/image-common-master/etc /etc/JARVICE && chmod 755 /etc/JARVICE && rm -rf /tmp/image-common-master
-RUN mkdir -m 0755 /data && chown nimbix:nimbix /data
-RUN sed -ie 's/start on.*/start on filesystem/' /etc/init/ssh.conf
-
-# configure Jupyter with default password h2oai
-USER nimbix
-RUN jupyter notebook --generate-config
-COPY configs/jupyter_notebook_config.json /home/nimbix/.jupyter/jupyter_notebook_config.json
+  chmod +x /opt/start-cluster.sh
