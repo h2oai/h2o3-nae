@@ -9,6 +9,8 @@ RUN \
   apt-get -y update && \
   apt-get install -y \
   apt-utils \
+  curl \
+  wget \
   software-properties-common \
   python-software-properties
   
@@ -18,8 +20,6 @@ RUN \
   gpg -a --export E084DAB9 | apt-key add -&& \
   curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
   add-apt-repository -y ppa:webupd8team/java && \
-  add-apt-repository ppa:chris-lea/zeromq && \
-  add-apt-repository ppa:chris-lea/libsodium && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
@@ -27,10 +27,8 @@ RUN \
 RUN \
   apt-get -y update && \
   apt-get -y install \
-  curl \
   python3-setuptools \
   python3-pip \
-  wget \
   gdebi \
   python3-pandas \
   python3-numpy \
@@ -41,9 +39,6 @@ RUN \
   libmysqlclient-dev \
   libgtk2.0-0 \
   nodejs \
-  libsodium-dev \
-  libzmq5 \
-  libzmq5-dev \
   iputils-ping
   
 # Nimbix Common
