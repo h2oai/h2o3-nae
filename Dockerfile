@@ -4,11 +4,6 @@ MAINTAINER H2o.ai <ops@h2o.ai>
 # Nimbix base OS
 ENV DEBIAN_FRONTEND noninteractive
 
-# Nimbix Integrations
-ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
-ADD ./NAE/AppDef.png /etc//NAE/default.png
-ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
-
 RUN \
   apt-get -y update && \
   apt-get -y install \
@@ -116,3 +111,10 @@ RUN \
   chmod +x /opt/start-h2o3.sh && \
   chmod +x /opt/make-flatfile.sh && \
   chmod +x /opt/start-cluster.sh
+
+# Nimbix Integrations
+ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
+ADD ./NAE/AppDef.png /etc//NAE/default.png
+ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
+
+
