@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo /sbin/init
+
 /opt/make-flatfile.sh
 /opt/start-h2o3.sh &
 
@@ -11,6 +13,7 @@ done
 # Change Nginx Redirect
 sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
 sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
+
 # Start Notebook
 /usr/local/bin/nimbix_notebook
 
