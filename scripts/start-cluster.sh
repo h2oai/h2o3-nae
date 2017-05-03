@@ -1,10 +1,11 @@
 #!/bin/bash
 
-cat /etc/JARVICE/nodes | while read n;
-do
-  echo "Starting node $n"
-  /opt/sssh nimbix@$n /opt/make-flatfile.sh &
-  /opt/sssh nimbix@$n /opt/start-h2o3.sh &
+/opt/make-flatfile.sh
+/opt/start-h2o3.sh &
+
+for i in `tail -n +2 /etc/JARVICE/nodes`; do
+   sssh $i "/opt/make-flatfile.sh"
+   sssh $i "/opt/start-h2o3.sh &"
 done
 
 # Change Nginx Redirect
