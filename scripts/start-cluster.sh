@@ -6,8 +6,8 @@ sudo /sbin/init
 /opt/start-h2o3.sh &
 
 for i in `tail -n +2 /etc/JARVICE/nodes`; do
-   sssh $i "/opt/make-flatfile.sh"
-   sssh $i "/opt/start-h2o3.sh &"
+   /opt/sssh $i /opt/make-flatfile.sh
+   /opt/sssh $i /opt/start-h2o3.sh &
 done
 
 # Change Nginx Redirect
