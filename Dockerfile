@@ -4,12 +4,24 @@ MAINTAINER H2o.ai <ops@h2o.ai>
 # Nimbix base OS
 ENV DEBIAN_FRONTEND noninteractive
 
+# Nimbix Common
+RUN \
+  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
+
+# Expose port 22 for local JARVICE emulation in docker
+EXPOSE 22
+
+# Notebook Common
+ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
+RUN \
+  bash /tmp/install-ubuntu.sh 3 && \
+  rm -f /tmp/install-ubuntu.sh
+
 # Setup Repos
 RUN \
   apt-get -y update && \
   apt-get install -y \
   apt-utils \
-  curl \
   wget \
   software-properties-common \
   python-software-properties
