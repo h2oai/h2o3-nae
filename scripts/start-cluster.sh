@@ -1,7 +1,9 @@
 #!/bin/bash
 
-#cp /etc/JARVICE/nodes /opt/flatfile.txt
-#sed -e 's/$/:54321/' -i /opt/flatfile.txt
+# Change Nginx Redirect
+sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
+sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
+/etc/init.d/nginx restart
 
 cat /etc/JARVICE/nodes | while read n;
 do
@@ -16,6 +18,7 @@ sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
 
 # Start Notebook
 /usr/local/bin/nimbix_notebook
+
 
 # Start RStudio
 /etc/init.d/rstudio-server restart
