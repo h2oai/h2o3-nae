@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
+FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
 MAINTAINER H2o.ai <ops@h2o.ai>
 
 # Nimbix base OS
@@ -12,8 +12,12 @@ ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
 RUN \
   apt-get -y update && \
   apt-get -y install \
-    curl \
-    apt-utils
+  curl \
+  apt-utils \
+  python3-setuptools \
+  python3-pip \
+  gdebi \
+  libzmq-dev
 
 RUN \
   curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
@@ -23,10 +27,9 @@ EXPOSE 22
 
 # Notebook Common
 ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
-RUN \
-  bash /tmp/install-ubuntu.sh 3 && \
-  rm -f /tmp/install-ubuntu.sh
+RUN bash /tmp/install-ubuntu.sh 3 && rm -f /tmp/install-ubuntu.sh
 
+# Apt-get dependancies
 RUN apt-get -y install \
   software-properties-common \
   python-software-properties \
@@ -34,11 +37,10 @@ RUN apt-get -y install \
 
 # Setup Repos
 RUN \
-  echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list && \
+  echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list && \
   gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
   gpg -a --export E084DAB9 | apt-key add -&& \
   curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
-  add-apt-repository ppa:fkrull/deadsnakes  && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -47,7 +49,6 @@ RUN \
 # Install H2o dependancies
 RUN \
   apt-get install -y \
-  python3-sklearn \
   python3-pandas \
   python3-numpy \
   python3-matplotlib \
@@ -67,13 +68,26 @@ RUN \
   wget https://cran.cnr.berkeley.edu/src/contrib/tibble_1.3.0.tar.gz && \
   wget https://cran.cnr.berkeley.edu/src/contrib/hms_0.3.tar.gz && \
   wget https://cran.cnr.berkeley.edu/src/contrib/feather_0.3.1.tar.gz && \
-  R CMD INSTALL data.table_1.10.4.tar.gz lazyeval_0.2.0.tar.gz Rcpp_0.12.10.tar.gz tibble_1.3.0.tar.gz hms_0.3.tar.gz feather_0.3.1.tar.gz
+  R CMD INSTALL \
+  data.table_1.10.4.tar.gz \
+  lazyeval_0.2.0.tar.gz \
+  Rcpp_0.12.10.tar.gz \
+  tibble_1.3.0.tar.gz \
+  hms_0.3.tar.gz \
+  feather_0.3.1.tar.gz
 
 # Install Oracle Java 8
 RUN \
   apt-get install -y oracle-java8-installer && \
   apt-get clean && \
   rm -rf /var/cache/apt/*
+
+# Install RStudio Server
+# Install RStudio
+RUN \
+  wget https://download2.rstudio.org/rstudio-server-1.0.143-amd64.deb && \
+  gdebi -n rstudio-server-1.0.143-amd64.deb && \
+  rm rstudio-server-1.0.143-amd64.deb
 
 # Install H2o
 RUN \

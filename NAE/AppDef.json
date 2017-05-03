@@ -65,7 +65,7 @@
             "path": "/usr/local/bin/nimbix_notebook",
             "interactive": true,
             "name": "Jupyter Notebook",
-            "description": "Launch Jupyter Notebook, ssh tunnel to get secure access, ex: ssh -L 8888:localhost:8888 nimbix@<public_ip>",
+            "description": "Launch Jupyter Notebook, Connection address and credentials will appear in your web browser once available.",
             "parameters": {}
         },
         "SSH": {
