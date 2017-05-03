@@ -4,36 +4,15 @@ MAINTAINER H2o.ai <ops@h2o.ai>
 # Nimbix base OS
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN \
-  apt-get -y update && \
-  apt-get -y install \
-  curl \
-  apt-utils \
-  python3-setuptools \
-  python3-pip \
-  wget \
-  gdebi \
-
-RUN \
-  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
-
-# Expose port 22 for local JARVICE emulation in docker
-EXPOSE 22
-
-# Notebook Common
-ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
-RUN \
-  bash /tmp/install-ubuntu.sh 3 && \
-  rm -f /tmp/install-ubuntu.sh
-
-# Apt-get dependancies
-RUN apt-get -y install \
-  software-properties-common \
-  python-software-properties \
-  iputils-ping 
-
 # Setup Repos
 RUN \
+  apt-get -y update && \
+  apt-get install -y \
+  apt-utils \
+  software-properties-common \
+  python-software-properties
+  
+RUN \  
   echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list && \
   gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
   gpg -a --export E084DAB9 | apt-key add -&& \
@@ -45,9 +24,14 @@ RUN \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
-# Install H2o dependancies
 RUN \
-  apt-get install -y \
+  apt-get -y update && \
+  apt-get -y install \
+  curl \
+  python3-setuptools \
+  python3-pip \
+  wget \
+  gdebi \
   python3-pandas \
   python3-numpy \
   python3-matplotlib \
@@ -59,7 +43,21 @@ RUN \
   nodejs \
   libsodium-dev \
   libzmq5 \
-  libzmq5-dev
+  libzmq5-dev \
+  iputils-ping
+  
+# Nimbix Common
+RUN \
+  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
+
+# Expose port 22 for local JARVICE emulation in docker
+EXPOSE 22
+
+# Notebook Common
+ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
+RUN \
+  bash /tmp/install-ubuntu.sh 3 && \
+  rm -f /tmp/install-ubuntu.sh
 
 # Get R
 RUN \
