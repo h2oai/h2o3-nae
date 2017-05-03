@@ -118,5 +118,3 @@ RUN \
 ADD ./NAE/AppDef.json /etc/NAE/AppDef.json
 ADD ./NAE/AppDef.png /etc//NAE/default.png
 ADD ./NAE/screenshot.png /etc/NAE/screenshot.png
-
-
