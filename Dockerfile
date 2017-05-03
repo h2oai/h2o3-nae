@@ -11,8 +11,8 @@ RUN \
   apt-utils \
   python3-setuptools \
   python3-pip \
+  wget \
   gdebi \
-  libzmq-dev
 
 RUN \
   curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
@@ -22,7 +22,9 @@ EXPOSE 22
 
 # Notebook Common
 ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
-RUN bash /tmp/install-ubuntu.sh 3 && rm -f /tmp/install-ubuntu.sh
+RUN \
+  bash /tmp/install-ubuntu.sh 3 && \
+  rm -f /tmp/install-ubuntu.sh
 
 # Apt-get dependancies
 RUN apt-get -y install \
@@ -37,6 +39,8 @@ RUN \
   gpg -a --export E084DAB9 | apt-key add -&& \
   curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
   add-apt-repository -y ppa:webupd8team/java && \
+  add-apt-repository ppa:chris-lea/zeromq && \
+  add-apt-repository ppa:chris-lea/libsodium && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
@@ -52,7 +56,10 @@ RUN \
   libcurl4-openssl-dev \
   libmysqlclient-dev \
   libgtk2.0-0 \
-  nodejs 
+  nodejs \
+  libsodium-dev \
+  libzmq5 \
+  libzmq5-dev
 
 # Get R
 RUN \
@@ -77,7 +84,6 @@ RUN \
   apt-get clean && \
   rm -rf /var/cache/apt/*
 
-# Install RStudio Server
 # Install RStudio
 RUN \
   wget https://download2.rstudio.org/rstudio-server-1.0.143-amd64.deb && \
