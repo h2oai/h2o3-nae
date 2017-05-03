@@ -3,7 +3,6 @@
 # Change Nginx Redirect
 sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
 sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
-sudo /etc/init.d/nginx restart
 
 cat /etc/JARVICE/nodes | while read n;
 do
