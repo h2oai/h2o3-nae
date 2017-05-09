@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Start SSH
-sudo /sbin/init
+sudo service ssh restart
+
+# Start RStudio
+sudo /etc/init.d/rstudio-server restart
 
 # Start nodes
 for i in `tail -n +2 /etc/JARVICE/nodes`; do
@@ -19,6 +22,3 @@ sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
 
 # Start Notebook
 /usr/local/bin/nimbix_notebook
-
-# Start RStudio
-sudo /etc/init.d/rstudio-server restart

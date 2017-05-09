@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
+FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 MAINTAINER H2o.ai <ops@h2o.ai>
 
 # Nimbix base OS
@@ -36,7 +36,6 @@ RUN \
   echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list && \
   gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
   gpg -a --export E084DAB9 | apt-key add -&& \
-  curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -56,7 +55,6 @@ RUN \
   libcurl4-openssl-dev \
   libmysqlclient-dev \
   libgtk2.0-0 \
-  nodejs \
   iputils-ping
   
 # Get R
@@ -69,12 +67,13 @@ RUN \
   wget https://cran.cnr.berkeley.edu/src/contrib/hms_0.3.tar.gz && \
   wget https://cran.cnr.berkeley.edu/src/contrib/feather_0.3.1.tar.gz && \
   R CMD INSTALL \
-  data.table_1.10.4.tar.gz \
-  lazyeval_0.2.0.tar.gz \
-  Rcpp_0.12.10.tar.gz \
-  tibble_1.3.0.tar.gz \
-  hms_0.3.tar.gz \
-  feather_0.3.1.tar.gz
+    data.table_1.10.4.tar.gz \
+    lazyeval_0.2.0.tar.gz \
+    Rcpp_0.12.10.tar.gz \
+    tibble_1.3.0.tar.gz \
+    hms_0.3.tar.gz \
+    feather_0.3.1.tar.gz && \
+  R -e 'chooseCRANmirror(graphics=FALSE, ind=54);install.packages(c("R.utils",  "RCurl", "jsonlite", "statmod", "devtools", "roxygen2", "testthat", "Rcpp", "fpc", "RUnit", "ade4", "glmnet", "gbm", "ROCR", "e1071", "ggplot2", "LiblineaR"))'
 
 # Install Oracle Java 8
 RUN \
@@ -98,7 +97,8 @@ RUN \
   rm /opt/h2o.zip && \
   cd /opt && \
   cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \ 
-  cp h2o.jar /opt
+  cp h2o.jar /opt && \
+  R CMD INSTALL `find . -name "h2o*.tar.gz"`
 
 EXPOSE 54321
   
@@ -112,6 +112,7 @@ RUN \
 COPY scripts/start-h2o3.sh /opt/start-h2o3.sh
 COPY scripts/make-flatfile.sh /opt/make-flatfile.sh
 COPY scripts/start-cluster.sh /opt/start-cluster.sh
+COPY scripts/start-rstudio.sh /opt/start-rstudio.sh
 COPY scripts/sssh /opt/sssh
 
 # Set executable on scripts
@@ -120,6 +121,7 @@ RUN \
   chmod +x /opt/start-h2o3.sh && \
   chmod +x /opt/make-flatfile.sh && \
   chmod +x /opt/start-cluster.sh && \
+  chmod +x /opt/start-rstudio.sh && \
   chmod +x /opt/sssh 
 
 # Nimbix Integrations
