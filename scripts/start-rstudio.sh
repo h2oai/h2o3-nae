@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Change Nginx Redirect
-sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
-sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
+sudo sed -e 's/8888/8787/' -i /etc/nginx/sites-enabled/default
+sudo sed -e 's/8888/8787/' -i /etc/nginx/sites-enabled/notebook-site
 
 # Start SSH
 sudo system ssh restart
