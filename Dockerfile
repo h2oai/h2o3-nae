@@ -14,7 +14,6 @@ RUN \
 RUN \
   curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
 
-# Expose port 22 for local JARVICE emulation in docker
 EXPOSE 22
 
 # Notebook Common
@@ -56,6 +55,8 @@ RUN \
   iputils-ping
   
 # Get R
+WORKDIR /opt
+
 RUN \
   apt-get install -y r-base r-base-dev && \
   wget https://cran.cnr.berkeley.edu/src/contrib/data.table_1.10.4.tar.gz && \
@@ -71,13 +72,8 @@ RUN \
     tibble_1.3.0.tar.gz \
     hms_0.3.tar.gz \
     feather_0.3.1.tar.gz && \
+    rm -rf *.tar.gz && \
   R -e 'chooseCRANmirror(graphics=FALSE, ind=54);install.packages(c("R.utils",  "RCurl", "jsonlite", "statmod", "devtools", "roxygen2", "testthat", "Rcpp", "fpc", "RUnit", "ade4", "glmnet", "gbm", "ROCR", "e1071", "ggplot2", "LiblineaR"))'
-
-# Install Oracle Java 8
-RUN \
-  apt-get install -y oracle-java8-installer && \
-  apt-get clean && \
-  rm -rf /var/cache/apt/*
 
 # Install RStudio
 RUN \
@@ -86,6 +82,12 @@ RUN \
   rm rstudio-server-1.0.143-amd64.deb
 
 EXPOSE 8787
+
+# Install Oracle Java 8
+RUN \
+  apt-get install -y oracle-java8-installer && \
+  apt-get clean && \
+  rm -rf /var/cache/apt/*
 
 # Install H2o
 RUN \
