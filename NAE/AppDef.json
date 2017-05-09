@@ -69,10 +69,10 @@
             "parameters": {}
         },
         "Rstudio": { 
-        "path": "/opt/start-rstudio.sh",
+            "path": "/opt/start-rstudio.sh",
             "interactive": true,
             "name": "RStudio Server",
-            "description": "Run the H2o Server",
+            "description": "Run the RStudio Server",
             "parameters": {}
         },
         "SSH": {
