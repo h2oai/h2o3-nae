@@ -78,7 +78,7 @@ RUN \
 # Install RStudio
 RUN \
   wget https://download2.rstudio.org/rstudio-server-1.0.143-amd64.deb && \
-  gdebi -n rstudio-server-1.0.143-amd64.deb && \
+  gdebi --non-interactive rstudio-server-1.0.143-amd64.deb && \
   rm rstudio-server-1.0.143-amd64.deb
 
 EXPOSE 8787

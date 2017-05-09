@@ -4,7 +4,7 @@
 sudo service ssh restart
 
 # Start RStudio
-sudo /etc/init.d/rstudio-server restart
+sudo service rstudio-server restart
 
 # Start nodes
 for i in `tail -n +2 /etc/JARVICE/nodes`; do
