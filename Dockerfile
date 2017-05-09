@@ -25,15 +25,13 @@ RUN \
 
 # Setup Repos
 RUN \
-  apt-get -y update && \
   apt-get install -y \
   apt-utils \
-  wget \
   software-properties-common \
   python-software-properties
   
 RUN \  
-  echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list && \
+  echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list && \
   gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
   gpg -a --export E084DAB9 | apt-key add -&& \
   add-apt-repository -y ppa:webupd8team/java && \
@@ -92,22 +90,19 @@ EXPOSE 8787
 # Install H2o
 RUN \
   wget http://h2o-release.s3.amazonaws.com/h2o/latest_stable -O latest && \
-  wget --no-check-certificate -i latest -O /opt/h2o.zip && \
-  unzip -d /opt /opt/h2o.zip && \
-  rm /opt/h2o.zip && \
+  wget --no-check-certificate -i latest -O /opt/h2o-latest.zip && \
+  unzip -d /opt /opt/h2o-latest.zip && \
+  rm /opt/h2o-latest.zip && \
   cd /opt && \
   cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \ 
   cp h2o.jar /opt && \
-  R CMD INSTALL `find . -name "h2o*.tar.gz"`
-
-EXPOSE 54321
-  
-# Install Python Dependancies
-RUN \
+  R CMD INSTALL `find . -name "h2o*.tar.gz"` && \
   /usr/bin/pip3 install --upgrade pip && \
   cd /opt && \
   /usr/bin/pip3 install `find . -name "*.whl"`
 
+EXPOSE 54321
+  
 # Copy bash scripts
 COPY scripts/start-h2o3.sh /opt/start-h2o3.sh
 COPY scripts/make-flatfile.sh /opt/make-flatfile.sh
