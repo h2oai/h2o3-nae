@@ -68,6 +68,13 @@
             "description": "Launch Jupyter Notebook, Connection address and credentials will appear in your web browser once available.",
             "parameters": {}
         },
+        "Rstudio": 
+        "path": "/opt/start-rstudio.sh",
+            "interactive": true,
+            "name": "RStudio Server",
+            "description": "Run the H2o Server",
+            "parameters": {}
+        },
         "SSH": {
             "path": "/sbin/init",
             "interactive": true,
