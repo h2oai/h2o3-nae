@@ -12,4 +12,4 @@ sudo system ssh restart
 # Start RStudio
 sudo service nginx restart
 
-sudo /etc/init.d/rstudio-server restart
+sudo rstudio-server restart
