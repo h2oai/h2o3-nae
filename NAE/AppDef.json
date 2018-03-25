@@ -1,5 +1,20 @@
+"name": "DriverlessAI 1.0.25 Centos7 x86_64",
+    "description": "rel-1.0.25 x86_64",
+    "author": "h2o.ai",
+    "licensed": true,
+    "classifications": [
+        "Machine Learning/Deep Learning"
+    ],
+    "machines": [
+        "n*",
+        "ng*",
+        "ngo8"
+    ],
+
+
+
 {
-    "name": "H2o3",
+    "name": "H2o3 3.18.0.4 Ubuntu x86_64",
     "description": "Fast Scalable Machine Learning For Smarter Applications",
     "author": "h2o.ai",
     "licensed": true,
@@ -7,13 +22,7 @@
         "Machine Learning/Deep Learning"
     ],
     "machines": [
-        "n0",
-        "n1",
-        "n2",
-        "n3",
-        "n4",
-        "n5",
-        "n32"
+        "n*"
     ],
     "scale_max": 16,
     "vault-types": [
