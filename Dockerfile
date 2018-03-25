@@ -91,7 +91,7 @@ RUN \
 
 # Install H2o
 RUN \
-  wget --no-check-certificate http://h2o-release.s3.amazonaws.com/h2o/rel-vajda/3/h2o-3.10.5.3.zip -O /opt/h2o-latest.zip && \
+  wget --no-check-certificate http://h2o-release.s3.amazonaws.com/h2o/rel-wolpert/4/h2o-3.18.0.4.zip -O /opt/h2o-latest.zip && \
   unzip -d /opt /opt/h2o-latest.zip && \
   rm /opt/h2o-latest.zip && \
   cd /opt && \
