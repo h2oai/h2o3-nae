@@ -2,9 +2,7 @@
 
 # Start SSH
 sudo service ssh restart
-
-# Start RStudio
-sudo service rstudio-server restart
+sudo service nginx stop
 
 # Start nodes
 for i in `tail -n +2 /etc/JARVICE/nodes`; do
@@ -19,6 +17,8 @@ done
 # Change Nginx Redirect
 sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
 sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
+
+sudo service nginx start
 
 # Start Notebook
 /usr/local/bin/nimbix_notebook
