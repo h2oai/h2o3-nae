@@ -14,8 +14,6 @@ RUN \
 RUN \
   curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh | bash
 
-EXPOSE 22
-
 # Notebook Common
 ADD https://raw.githubusercontent.com/nimbix/notebook-common/master/install-ubuntu.sh /tmp/install-ubuntu.sh
 RUN \
@@ -51,8 +49,9 @@ RUN \
   rm /opt/h2o-latest.zip && \
   cd /opt && \
   cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \ 
-  cp h2o.jar /opt && \
+  cp h2o.jar /opt
 
+EXPOSE 22
 EXPOSE 54321
   
 # Copy bash scripts
