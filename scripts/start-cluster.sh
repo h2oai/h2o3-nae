@@ -2,7 +2,6 @@
 
 # Start SSH
 sudo service ssh restart
-sudo service nginx stop
 
 # Start nodes
 for i in `tail -n +2 /etc/JARVICE/nodes`; do
@@ -15,10 +14,8 @@ done
 /opt/start-h2o3.sh &
 
 # Change Nginx Redirect
-sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
-sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
-
-sudo service nginx start
+#sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/default
+#sudo sed -e 's/8888/54321/' -i /etc/nginx/sites-enabled/notebook-site
 
 # Start Notebook
 /usr/local/bin/nimbix_notebook
