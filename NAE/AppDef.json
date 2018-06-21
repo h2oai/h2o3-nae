@@ -7,7 +7,9 @@
         "Machine Learning/Deep Learning"
     ],
     "machines": [
-        "n*"
+        "n*",
+        "ng*",
+        "ngo8"
     ],
     "scale_max": 16,
     "vault-types": [
