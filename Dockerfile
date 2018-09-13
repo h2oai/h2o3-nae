@@ -44,7 +44,7 @@ RUN \
 
 # Install H2o
 RUN \
-  wget --no-check-certificate http://h2o-release.s3.amazonaws.com/h2o/rel-wright/2/h2o-3.20.0.2.zip -O /opt/h2o-latest.zip && \
+  wget --no-check-certificate http://h2o-release.s3.amazonaws.com/h2o/rel-wright/7/h2o-3.20.0.7.zip -O /opt/h2o-latest.zip && \
   unzip -d /opt /opt/h2o-latest.zip && \
   rm /opt/h2o-latest.zip && \
   cd /opt && \
